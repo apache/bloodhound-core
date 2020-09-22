@@ -83,6 +83,20 @@ Note that currently models are in flux and, for the moment, no support should
 be expected for migrations as models change. This will change when basic
 models gain stability.
 
+## Setting up a superuser
+
+For certain operations it will be useful to have accounts and superusers to
+work with. There are a few ways to add a superuser. For interactive use, the
+`createsuperuser` action is usually straightforward enough:
+
+```
+pipenv run python manage.py createsuperuser --email admin@example.com --username admin
+```
+
+Entering the password twice on prompting is currently required. If the options
+for `--username` and `--email` are skipped, the command will request these
+details first.
+
 ## Running the development server:
 
 ```
@@ -100,8 +114,8 @@ Currently there is not much to see at the specified location. More work has
 been done on the core API. The following views may be of interest as you
 explore:
 
- * http://127.0.0.1:8000/ticket/
  * http://127.0.0.1:8000/schema_view/
+ * http://127.0.0.1:8000/api/
 
 These paths are subject to change.
 
