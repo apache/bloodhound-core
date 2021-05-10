@@ -17,13 +17,21 @@
 
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse
-from rest_framework import viewsets
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions, viewsets
 from . import serializers
 from . import models
 
-from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Bloodhound Core API')
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Bloodhound Core API',
+        default_version='v1',
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 
 def home(request):

@@ -2,79 +2,130 @@
 
 ## Getting the Bloodhound Code:
 
-There is a reasonable chance that you are reading these instructions from a
-copy of the source code that you have already placed on the computer that you
-wish to install on. If this is the case you can skip on to the next section.
+Note that this document describes a new Apache Bloodhound project that is
+intending to replace the Trac-based version. If you are interested in that
+version, the appropriate code is available from [here][Legacy Repo].
 
-While in early development, the alternatives for getting the code include
-checking out from [Subversion] with the following command:
+The new version of Apache Bloodhound is in the bloodhound-core git repository
+which is mirrored on Github [here][Github Mirror].
 
-```
-svn checkout https://svn.apache.org/repos/asf/bloodhound/branches/bh_core_experimental/ bloodhound
-```
-
-or cloning with [Git] from the [Apache Bloodhound Github mirror] - the command
-below should also check out the appropriate branch:
+If you have not already got the code, you can clone the repo with the
+following command:
 
 ```
-git clone --branch bh_core_experimental https://github.com/apache/bloodhound.git
+git clone https://github.com/apache/bloodhound-core.git
 ```
 
-With the commands as specified, both will place the code in the `bloodhound`
-directory.
+which will put the code in the `bloodhound-core` directory.
 
-[Subversion]: https://subversion.apache.org/
-[Git]: https://git-scm.com/
-[Apache Bloodhound mirror]: https://github.com/apache/bloodhound
-[Github]: https://github.com/
+[Legacy Repo]: https://svn.apache.org/repos/asf/bloodhound/
+[Github Mirror]: https://github.com/apache/bloodhound-core
 
-## Installing Python and Pipenv
+## Prerequisites
 
-Bloodhound core is currently written in [Python 3] and uses [Pipenv] for
-looking after the python based dependencies.
+This version of Apache Bloodhound requires Python, Poetry and Django.
 
-It should be possible to install and run the core successfully with Python 3.6
-or newer. You may find that versions from Python 3.4 work but this is not
-currently tested and it is possible that Python features from newer versions
-may sneak in.
+### Installing Python
 
-The guide at <https://docs.python-guide.org/> gives good instructions for
-installing Python on [Linux][Python on Linux], [MacOS][Python on MacOS] and
-[Windows][Python on Windows].
+The versions of Python that can be used are currently 3.6, 3.7, 3.8 and 3.9.
 
-Further information about pipenv is available at <https://docs.pipenv.org/>.
+Where convenient is it sensible to go for the newest release of Python that
+you can.
 
-[Python 3]: https://docs.python.org/3/
-[Pipenv]: https://pipenv.readthedocs.io/en/latest/
-[Python on Linux]: https://docs.python-guide.org/starting/install3/linux/#install3-linux
-[Python on MacOS]: https://docs.python-guide.org/starting/install3/osx/#install3-osx
-[Python on Windows]: https://docs.python-guide.org/starting/install3/win/#install3-windows
+Modern Linux and BSD distrubutions will have new enough Python 3 packages in
+their repos and are often already installed if it is not a minimal
+installation. For these cases it will usually be sensible to take advantage of
+this.
+
+If this is not the case, you can look for advice from:
+
+ * [The Hitchiker's Guide to Python][Python Guide] for their install guides on
+   Mac OS X, Windows and Linux.
+ * The official Python documentation on [Setup and Usage][Python Usage] which
+   includes information for installing on more Unix platforms, Windows and Mac.
+
+[Python Guide]: https://docs.python-guide.org/
+[Python Usage]: https://docs.python.org/3/using/
+
+### Installing Poetry
+
+The project now uses [Poetry][Poetry] for python environment management and
+looking after further dependencies.
+
+If you are installing on linux, it is possible that poetry is installable from
+the repositories for your distro. For example, on recent Fedora releases, the
+following should work:
+
+```
+sudo dnf install poetry
+```
+
+For anywhere else you can consider following the instructions from the
+[Poetry documentation][Poetry Docs].
+
+Once installed, optionally you can pre-configure poetry to make it use a
+`.venv` directory at the root of poetry projects. This can be helpful as it
+makes this easier to find and removal of your copy of the git repo will also
+clean up these files. If this seems useful:
+
+```
+poetry config virtualenvs.in-project true
+```
+
+As Poetry creates and manages python virtual environments (virtualenv) for you,
+it is useful to be aware of how they are used. For convenience, throughout this
+document, any command that requires the virtualenv to be 'active' will be
+provided with `poetry run` before the command. While this may get old, it is
+effectively robust as it should work without having to remind you all the time
+to be sure the virtualenv is activated.
+
+For a little more completeness, the following lists the options along with
+example sessions, each including a command to demonstrate exiting the
+virtualenv if applicable:
+
+ * prefix commands that require the virtualenv with `poetry run`:
+   ```
+   poetry run python --version
+   poetry run django-admin help
+   ```
+ * start the `poetry shell`:
+   ```
+   poetry shell
+   python --version
+   django-admin help
+   exit
+   ```
+ * activate the virtualenv manually (example for bash and assumes the
+   suggested `virtualenvs.in-project` option was set:
+   ```
+   source .venv/bin/activate
+   python --version
+   django-admin help
+   deactivate
+   ```
+
+[Poetry]: https://python-poetry.org/
+[Poetry Docs]: https://python-poetry.org/docs/
 
 ## Preparing the Python environment
 
-It should now be possible to use pipenv to install the rest of the project
-dependencies and bloodhound itself. Note that the exactly required command may
-depend on details like whether you have multiple versions of python available
-but for most cases, the following should work. If in doubt, just be more
-specific about the python version that you intend to use.
+It should now be possible to use poetry to install the rest of the project
+dependencies.
 
-For the same directory as the `Pipfile` for the project run:
+From the root of the project folder (probably `bloodhound-core` if the above
+instructions have been followed) run:
 
 ```
-pipenv --python 3 install
+poetry install
 ```
 
 ## Setup
 
-Although it will make the commands more verbose, where a command requires
-the pipenv environment that has been created, we will use the `pipenv run`
-command in preference to requiring that the environment is 'activated'.
-
 The basic setup steps to get running are:
 
 ```
-pipenv run python manage.py makemigrations trackers
-pipenv run python manage.py migrate
+poetry run python manage.py makemigrations trackers
+poetry run python manage.py migrate
 ```
 
 The above will do the basic database setup.
@@ -90,7 +141,7 @@ work with. There are a few ways to add a superuser. For interactive use, the
 `createsuperuser` action is usually straightforward enough:
 
 ```
-pipenv run python manage.py createsuperuser --email admin@example.com --username admin
+poetry run python manage.py createsuperuser --email admin@example.com --username admin
 ```
 
 Entering the password twice on prompting is currently required. If the options
@@ -100,7 +151,7 @@ details first.
 ## Running the development server:
 
 ```
-pipenv run python manage.py runserver
+poetry run python manage.py runserver
 ```
 
 Amongst the initial output of that command will be something like:
@@ -114,7 +165,8 @@ Currently there is not much to see at the specified location. More work has
 been done on the core API. The following views may be of interest as you
 explore:
 
- * http://127.0.0.1:8000/schema_view/
+ * http://127.0.0.1:8000/swagger/
+ * http://127.0.0.1:8000/redoc/
  * http://127.0.0.1:8000/api/
 
 These paths are subject to change.
@@ -124,22 +176,18 @@ These paths are subject to change.
 Unit tests are currently being written with the standard unittest framework.
 This may be replaced with pytest.
 
-Running the tests require a little extra setup:
+Unit tests are run with the following command:
 
 ```
-pipenv install --dev
-```
-
-after which the tests may be run with the following command:
-
-```
-pipenv run python manage.py test
+poetry run python manage.py test
 ```
 
 ## Integration Tests
 
 The [Selenium] tests currently require that Firefox is installed and
-[geckodriver] is also on the path. If you 
+[geckodriver] is also on the path. If you do not already have geckodriver,
+the following shows one method to get it for linux:
+
 ```
 PLATFORM_EXT="linux64.tar.gz"
 BIN_LOCATION="$HOME/.local/bin"
@@ -156,7 +204,7 @@ If `$BIN_LOCATION` is on the system path, and the development server is
 running, it should be possible to run the integration tests.
 
 ```
-pipenv run python functional_tests.py
+poetry run python functional_tests.py
 ```
 
 There are currently not many tests - those that are there are in place to test
@@ -170,5 +218,5 @@ the setup above and assume that there will be useful tests in due course.
 Fixtures for tests when required can be generated with:
 
 ```
-pipenv run python manage.py dumpdata trackers --format=yaml --indent=2 > trackers/fixtures/[fixture-name].yaml
+poetry run python manage.py dumpdata trackers --format=yaml --indent=2 > trackers/fixtures/[fixture-name].yaml
 ```

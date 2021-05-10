@@ -33,5 +33,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('api/', include(router.urls)),
     path('api/tickets/<uuid:id>/', include(ticket_router.urls)),
-    path('schema_view/', views.schema_view),
+    path('swagger<str:format>', views.schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', views.schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', views.schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
