@@ -21,7 +21,7 @@ from selenium import webdriver
 import unittest
 
 
-class TicketViewTest(unittest.TestCase):
+class HomePageViewTest(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
@@ -29,10 +29,24 @@ class TicketViewTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_user_can_add_view_and_delete_ticket(self):
+    def test_user_can_see_homepage(self):
         self.browser.get('http://localhost:8000')
 
         self.assertIn('Bloodhound', self.browser.title)
+
+
+class ApiHomePageViewTest(unittest.TestCase):
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def test_user_can_see_api_homepage(self):
+        self.browser.get('http://localhost:8000/api')
+
+        self.assertIn('Api Root', self.browser.title)
 
 
 if __name__ == '__main__':

@@ -26,6 +26,38 @@ from django.urls import reverse
 logger = logging.getLogger(__name__)
 
 
+class Product(models.Model):
+    prefix = models.TextField(primary_key=True)
+    name = models.TextField()
+    description = models.TextField(blank=True, null=True)
+    owner = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bloodhound_product'
+
+
+class ProductConfig(models.Model):
+    """Possibly legacy table - keeping for now"""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    section = models.TextField()
+    option = models.TextField()
+    value = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bloodhound_productconfig'
+        unique_together = (('product', 'section', 'option'),)
+
+
+class ProductResourceMap(models.Model):
+    """Possibly legacy model - keeping for now"""
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    resource_type = models.TextField(blank=True, null=True)
+    resource_id = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bloodhound_productresourcemap'
+
+
 class ModelCommon(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)

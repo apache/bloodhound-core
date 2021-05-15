@@ -17,9 +17,22 @@
 
 from django.urls import path
 from django.conf.urls import include
+from rest_framework import routers
 from . import views
 
+router = routers.DefaultRouter()
+router.register('users', views.UserViewSet)
+router.register('groups', views.GroupViewSet)
+router.register('products', views.ProductViewSet)
+router.register('tickets', views.TicketViewSet)
+
+ticket_router = routers.DefaultRouter()
+ticket_router.register('ticketevents', views.ChangeEventViewSet)
+
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('api/', include('trackers.api.urls')),
+    path('', include(router.urls)),
+    path('tickets/<uuid:id>/', include(ticket_router.urls)),
+    path('swagger<str:format>', views.schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', views.schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', views.schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

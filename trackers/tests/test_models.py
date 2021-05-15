@@ -15,8 +15,27 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-from django.http import HttpResponse
+from django.test import TestCase
+from ..models import Product
 
 
-def home(request):
-    return HttpResponse('<html><title>Bloodhound Trackers</title></html>')
+class ProductTest(TestCase):
+    """Test modules for Product model"""
+    def setUp(self):
+        Product.objects.create(
+            prefix='BHD',
+            name='Bloodhound Legacy',
+            description='The original Apache Bloodhound',
+        )
+        Product.objects.create(
+            prefix='BH',
+            name='Bloodhound',
+            description='The future of Apache Bloodhound',
+        )
+
+    def test_product_name(self):
+        bhd = Product.objects.get(prefix='BHD')
+        bh = Product.objects.get(prefix='BH')
+
+        self.assertEqual(bhd.name, "Bloodhound Legacy")
+        self.assertEqual(bh.name, "Bloodhound")

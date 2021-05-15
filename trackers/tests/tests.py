@@ -18,7 +18,7 @@
 from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import resolve
-from trackers.views import home
+from ..views import home
 
 
 class HomePageTest(TestCase):
@@ -35,7 +35,7 @@ class HomePageTest(TestCase):
         self.assertTrue(response.content.endswith(b'</html>'))
 
 
-from trackers.models import Ticket
+from ..models import Ticket
 
 class TicketModelTest(TestCase):
     def test_last_update_on_create_returns_created_date(self):
