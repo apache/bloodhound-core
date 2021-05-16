@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from trackers import models
-from ..models import Product
+from ..models import Product, Ticket
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -23,41 +23,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    api_url = serializers.SerializerMethodField()
-    api_events_url = serializers.SerializerMethodField()
-
     class Meta:
-        model = models.Ticket
-        fields = '__all__'
+        model = Ticket
+        fields = (
+            'product_ticket_id',
+            'summary',
+            'description',
+        )
+        extra_kwargs = {'product_ticket_id': {'required': False}}
 
-    def get_api_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.api_url())
-
-    def get_api_events_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.api_events_url())
-
-
-class TicketFieldSerializer(serializers.ModelSerializer):
-    api_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.TicketField
-        fields = '__all__'
-
-    def get_api_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.api_url())
-
-
-class ChangeEventSerializer(serializers.ModelSerializer):
-    api_url = serializers.SerializerMethodField()
-    api_ticket_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.ChangeEvent
-        fields = '__all__'
-
-    def get_api_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.api_url())
-
-    def get_api_ticket_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.api_ticket_url())
+    def create(self, validated_data):
+        if 'prefix' not in self.context['view'].kwargs.keys():
+            prefix = self.context['view'].kwargs['product_prefix']
+            product = get_object_or_404(Product.objects.all(), prefix=prefix)
+            validated_data['product'] = product
+        return super().create(validated_data)

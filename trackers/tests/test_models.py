@@ -16,11 +16,11 @@
 #  under the License.
 
 from django.test import TestCase
-from ..models import Product
+from ..models import Product, Ticket
 
 
 class ProductTest(TestCase):
-    """Test modules for Product model"""
+    """Tests for Product model"""
     def setUp(self):
         Product.objects.create(
             prefix='BHD',
@@ -39,3 +39,44 @@ class ProductTest(TestCase):
 
         self.assertEqual(bhd.name, "Bloodhound Legacy")
         self.assertEqual(bh.name, "Bloodhound")
+
+
+class TicketTest(TestCase):
+    """Test for Ticket model"""
+    def setUp(self):
+        self.product = Product.objects.create(
+            prefix='BH',
+            name='Bloodhound',
+            description='Apache Bloodhound',
+        )
+
+    def test_ticket_create_sets_product_ticket_number(self):
+        ticket = Ticket.objects.create(
+            product=self.product,
+        )
+        self.assertIsNotNone(ticket.product_ticket_id)
+
+    def test_ticket_create_sets_unique_product_ticket_number(self):
+        ticket1 = Ticket.objects.create(
+            product=self.product,
+        )
+        ticket2 = Ticket.objects.create(
+            product=self.product,
+        )
+        self.assertNotEqual(ticket1.product_ticket_id, ticket2.product_ticket_id)
+
+    def test_ticket_create_uses_unique_product_ticket_number_when_tickets_deleted(self):
+        ticket1 = Ticket.objects.create(
+            product=self.product,
+        )
+        ticket2 = Ticket.objects.create(
+            product=self.product,
+        )
+        ticket1.delete()
+        ticket3 = Ticket.objects.create(
+            product=self.product,
+        )
+        self.assertIsNotNone(ticket1.product_ticket_id)
+        self.assertIsNotNone(ticket2.product_ticket_id)
+        self.assertIsNotNone(ticket3.product_ticket_id)
+        self.assertNotEqual(ticket2.product_ticket_id, ticket3.product_ticket_id)

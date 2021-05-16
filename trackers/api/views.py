@@ -16,12 +16,13 @@
 #  under the License.
 
 from django.contrib.auth.models import User, Group
+from django.shortcuts import get_object_or_404
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, status, viewsets
+from rest_framework.response import Response
 from . import serializers
-from ..models import Product
-from trackers import models
+from .. import models
 
 
 schema_view = get_schema_view(
@@ -45,20 +46,16 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
-
-
-class TicketFieldViewSet(viewsets.ModelViewSet):
-    queryset = models.TicketField.objects.all()
-    serializer_class = serializers.TicketFieldSerializer
+    lookup_field = 'prefix'
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = models.Ticket.objects.all()
     serializer_class = serializers.TicketSerializer
+    lookup_field = 'product_ticket_id'
 
-
-class ChangeEventViewSet(viewsets.ModelViewSet):
-    queryset = models.ChangeEvent.objects.all()
-    serializer_class = serializers.ChangeEventSerializer
+    def get_queryset(self, *args, **kwargs):
+        prefix = self.kwargs['product_prefix']
+        return models.Ticket.objects.filter(product=prefix)
