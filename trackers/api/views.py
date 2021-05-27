@@ -59,3 +59,33 @@ class TicketViewSet(viewsets.ModelViewSet):
     def get_queryset(self, *args, **kwargs):
         prefix = self.kwargs['product_prefix']
         return models.Ticket.objects.filter(product=prefix)
+
+
+class ComponentViewSet(viewsets.ModelViewSet):
+    queryset = models.Component.objects.all()
+    serializer_class = serializers.ComponentSerializer
+    lookup_field = 'name'
+
+    def get_queryset(self, *args, **kwargs):
+        prefix = self.kwargs['product_prefix']
+        return models.Component.objects.filter(product=prefix)
+
+
+class MilestoneViewSet(viewsets.ModelViewSet):
+    queryset = models.Milestone.objects.all()
+    serializer_class = serializers.MilestoneSerializer
+    lookup_field = 'name'
+
+    def get_queryset(self, *args, **kwargs):
+        prefix = self.kwargs['product_prefix']
+        return models.Milestone.objects.filter(product=prefix)
+
+
+class VersionViewSet(viewsets.ModelViewSet):
+    queryset = models.Version.objects.all()
+    serializer_class = serializers.VersionSerializer
+    lookup_field = 'name'
+
+    def get_queryset(self, *args, **kwargs):
+        prefix = self.kwargs['product_prefix']
+        return models.Version.objects.filter(product=prefix)

@@ -17,6 +17,8 @@
 
 from django.urls import path
 from django.conf.urls import include
+from rest_framework.schemas import get_schema_view
+from rest_framework.renderers import JSONOpenAPIRenderer
 from rest_framework_nested import routers
 from . import views
 
@@ -27,10 +29,17 @@ router.register('products', views.ProductViewSet)
 
 products_router = routers.NestedDefaultRouter(router, 'products', lookup='product')
 products_router.register('tickets', views.TicketViewSet, basename='product-tickets')
+products_router.register('components', views.ComponentViewSet, basename='product-components')
+products_router.register('milestones', views.MilestoneViewSet, basename='product-milestones')
+products_router.register('versions', views.VersionViewSet, basename='product-versions')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(products_router.urls)),
+    path('openapi', get_schema_view(
+        title="Apache Bloodhound",
+        version="0.1.0",
+    ), name='openapi-schema'),
     path(
         'swagger<str:format>',
         views.schema_view.without_ui(cache_timeout=0),

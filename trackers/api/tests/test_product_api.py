@@ -15,17 +15,16 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 
 from ...models import Product
-from ..serializers import ProductSerializer
 
 
 class ProductsApiTest(APITestCase):
-    """Test for GET all products API """
+    """Test for GET all products API"""
+
     def setUp(self):
         self.ally = Product.objects.create(prefix='ALY', name='Project Alice')
         self.bob = Product.objects.create(prefix='BOB', name='Project Robert')
@@ -47,24 +46,27 @@ class ProductsApiTest(APITestCase):
 
     def test_get_all_products(self):
         response = self.client.get(reverse('product-list'))
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        self.assertEqual(response.data, serializer.data)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            len(response.data),
+            Product.objects.count(),
+        )
 
     def test_get_product(self):
         response = self.client.get(
-            reverse('product-detail', args=[self.ally.prefix])
+            reverse('product-detail', args=[self.ally.prefix]),
         )
-        product = Product.objects.get(prefix=self.ally.prefix)
-        serializer = ProductSerializer(product)
-        self.assertEqual(response.data, serializer.data)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['prefix'], self.ally.prefix)
+        self.assertEqual(response.data['name'], self.ally.name)
 
     def test_get_invalid_product(self):
         response = self.client.get(
             reverse('product-detail', args=['randomnonsense'])
         )
+
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_product(self):
@@ -72,11 +74,12 @@ class ProductsApiTest(APITestCase):
             reverse('product-list'),
             self.new_product_data,
         )
+
         product = Product.objects.get(prefix=self.new_product_data['prefix'])
-        serializer = ProductSerializer(product)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(product.prefix, self.new_product_data['prefix'])
+        self.assertEqual(product.name, self.new_product_data['name'])
 
     def test_create_bad_product(self):
         response = self.client.post(
@@ -91,11 +94,13 @@ class ProductsApiTest(APITestCase):
             reverse('product-detail', args=[self.ally.prefix]),
             self.product_data,
         )
+
         product = Product.objects.get(prefix=self.product_data['prefix'])
-        serializer = ProductSerializer(product)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data)
+        self.assertNotEqual(self.ally.name, product.name)
+        self.assertEqual(self.product_data['prefix'], product.prefix)
+        self.assertEqual(self.product_data['name'], product.name)
 
     def test_update_product_bad_data(self):
         response = self.client.put(
@@ -109,4 +114,5 @@ class ProductsApiTest(APITestCase):
         response = self.client.delete(
             reverse('product-detail', args=[self.ally.prefix]),
         )
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

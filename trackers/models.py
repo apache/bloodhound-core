@@ -15,10 +15,7 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-import difflib
-import functools
 import logging
-import uuid
 
 from django.db import models
 from django.urls import reverse

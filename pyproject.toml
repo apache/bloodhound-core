@@ -11,6 +11,7 @@ django = "^3.2.2"
 django-rest-framework = "^0.1.0"
 drf-yasg = "^1.20.0"
 drf-nested-routers = "^0.93.3"
+pyyaml = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 selenium = "^3.141.0"
