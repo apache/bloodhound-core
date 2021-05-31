@@ -7,7 +7,7 @@ intending to replace the Trac-based version. If you are interested in that
 version, the appropriate code is available from [here][Legacy Repo].
 
 The new version of Apache Bloodhound is in the bloodhound-core git repository
-which is mirrored on Github [here][Github Mirror].
+which is mirrored on GitHub [here][GitHub Mirror].
 
 If you have not already got the code, you can clone the repo with the
 following command:
@@ -19,7 +19,7 @@ git clone https://github.com/apache/bloodhound-core.git
 which will put the code in the `bloodhound-core` directory.
 
 [Legacy Repo]: https://svn.apache.org/repos/asf/bloodhound/
-[Github Mirror]: https://github.com/apache/bloodhound-core
+[GitHub Mirror]: https://github.com/apache/bloodhound-core
 
 ## Prerequisites
 
@@ -32,14 +32,14 @@ The versions of Python that can be used are currently 3.6, 3.7, 3.8 and 3.9.
 Where convenient is it sensible to go for the newest release of Python that
 you can.
 
-Modern Linux and BSD distrubutions will have new enough Python 3 packages in
+Modern Linux and BSD distributions will have new enough Python 3 packages in
 their repos and are often already installed if it is not a minimal
 installation. For these cases it will usually be sensible to take advantage of
 this.
 
 If this is not the case, you can look for advice from:
 
- * [The Hitchiker's Guide to Python][Python Guide] for their install guides on
+ * [The Hitchhiker's Guide to Python][Python Guide] for their installation guides on
    Mac OS X, Windows and Linux.
  * The official Python documentation on [Setup and Usage][Python Usage] which
    includes information for installing on more Unix platforms, Windows and Mac.
@@ -96,7 +96,7 @@ virtualenv if applicable:
    exit
    ```
  * activate the virtualenv manually (example for bash and assumes the
-   suggested `virtualenvs.in-project` option was set:
+   suggested `virtualenvs.in-project` option was set):
    ```
    source .venv/bin/activate
    python --version
@@ -161,7 +161,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-Currently there is not much to see at the specified location. More work has
+Currently, there is not much to see at the specified location. More work has
 been done on the core API. The following views may be of interest as you
 explore:
 
