@@ -220,3 +220,98 @@ Fixtures for tests when required can be generated with:
 ```
 poetry run python manage.py dumpdata trackers --format=yaml --indent=2 > trackers/fixtures/[fixture-name].yaml
 ```
+
+## Postgresql Support
+
+While the sqlite database backend is convenient to reduce the complexity of
+setting up development environments, Django provides us with options to use a
+range of database backends.
+
+Initially we will concentrate on making it easier to support the Postgresql
+backend.
+
+### Requirements for connecting to a Postgresql database
+
+There are a number of options available to satisfy the dependencies for
+Postgresql support. For convenience we provide two alternatives through our
+poetry setup.
+
+Full installation for production like installation should use the following
+steps:
+
+ 1. Provide build dependencies (example for Fedora):
+    ```
+    sudo dnf install gcc python3-devel libpq-devel
+    ```
+ 2. Use poetry to install the python dependencies from pypi:
+    ```
+    poetry install --extras=postgres
+    ```
+
+Alternatively it is possible to avoid providing the build dependencies and
+instead follow the simplified steps:
+
+ 1. Use poetry to install the simplified python dependencies:
+    ```
+    poetry install --extras=postgres-binary
+    ```
+
+While we recommend the first option, particularly for production deployments,
+the second option may be pragmatic for setting up for development or testing.
+
+### Running Postgresql
+
+Although at this point we should have the ability to connect to a database
+through python, we have not addressed actually running a Postgresql database.
+
+For convenience, for development and testing purposes we are going to use
+containers (docker/podman) to address this. Other possibilities for this exist
+including installing and configuring postgresql-server but that is currently
+beyond the scope of this document.
+
+There is a docker folder at the base of the repo that, with a suitable docker
+host environment can be used to start up a postgresql database container.
+
+The docker/db/scripts directory allows for the provision of valid sql commands
+in *sql files that will be copied into the container and used to initialize
+the database if required.
+
+If you have docker-compose installed, the db container can be brought up with:
+
+```
+docker-compose up -d
+```
+
+If you have podman instead of docker, it is possible to use docker-compose in
+a similar way. Consult [this article][Use docker-compose with podman] for the
+details but note that, at the time of writing, there is an error in the
+article and you need to use
+
+```
+export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+```
+
+[Use docker-compose with podman]: https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/
+
+### Specifying the Postgresql Backend
+
+Finally you will need to specify the database to connect to. At the moment
+this can be achieved by editing the bh_core/settings.py file to change the
+DATABASES to look something like this, depending on the actual connection
+details.
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bloodhound',
+        'USER': 'bloodhound',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+     }
+ }
+ ```
+
+Note that this aspect of the setup should be expected to change to smooth over
+some of the difficulties around editing a file that is in source control.
