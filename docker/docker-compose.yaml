@@ -9,3 +9,9 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - 5432:5432
+
+  selenium-firefox:
+    container_name: selenium-firefox
+    image: docker.io/selenium/standalone-firefox
+    privileged: true
+    network_mode: host

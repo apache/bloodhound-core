@@ -18,31 +18,31 @@
 #  under the License.
 
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import unittest
 
 
-class HomePageViewTest(unittest.TestCase):
+class SeleniumTestCase(unittest.TestCase):
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        server = "http://127.0.0.1:4444/wd/hub"
+        self.browser = webdriver.Remote(
+            command_executor=server,
+            desired_capabilities=DesiredCapabilities.FIREFOX
+        )
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
 
+
+class HomePageViewTest(SeleniumTestCase):
     def test_user_can_see_homepage(self):
         self.browser.get('http://localhost:8000')
 
         self.assertIn('Bloodhound', self.browser.title)
 
 
-class ApiHomePageViewTest(unittest.TestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
-
+class ApiHomePageViewTest(SeleniumTestCase):
     def test_user_can_see_api_homepage(self):
         self.browser.get('http://localhost:8000/api')
 

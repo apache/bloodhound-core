@@ -179,29 +179,37 @@ This may be replaced with pytest.
 Unit tests are run with the following command:
 
 ```
-poetry run python manage.py test
+poetry run python manage.py test trackers
 ```
 
 ## Integration Tests
 
-The [Selenium] tests currently require that Firefox is installed and
-[geckodriver] is also on the path. If you do not already have geckodriver,
-the following shows one method to get it for linux:
+The integration tests are based on [Selenium] and Firefox. For convenience of
+setup, these tests currently expect to connect to Selenium at
+
+  http://127.0.0.1:4444/wd/hub
+
+If you have docker-compose installed, the `selenium-firefox` container can be
+brought up from the `docker` directory with:
 
 ```
-PLATFORM_EXT="linux64.tar.gz"
-BIN_LOCATION="$HOME/.local/bin"
-TMP_DIR=/tmp/geckodriver_download
-mkdir -p "$BIN_LOCATION" "$TMP_DIR"
-
-LATEST=$(wget -O - https://github.com/mozilla/geckodriver/releases/latest 2>&1 | awk 'match($0, /geckodriver-(v.*)-'"$PLATFORM_EXT"'/, a) {print a[1]; exit}')
-wget -N -P "$TMP_DIR" "https://github.com/mozilla/geckodriver/releases/download/$LATEST/geckodriver-$LATEST-$PLATFORM_EXT"
-tar -x geckodriver -zf "$TMP_DIR/geckodriver-$LATEST-$PLATFORM_EXT" -O > "$BIN_LOCATION"/geckodriver
-chmod +x "$BIN_LOCATION"/geckodriver
+docker-compose up selenium-firefox -d
 ```
 
-If `$BIN_LOCATION` is on the system path, and the development server is
-running, it should be possible to run the integration tests.
+Or, with just docker (from any directory):
+
+```
+docker run -d --network host --privileged --name server \
+        docker.io/selenium/standalone-firefox
+```
+
+Running the functional tests directly requires a running server and so run
+
+```
+poetry run python manage.py runserver
+```
+
+in one terminal and in a second:
 
 ```
 poetry run python functional_tests.py
@@ -211,7 +219,6 @@ There are currently not many tests - those that are there are in place to test
 the setup above and assume that there will be useful tests in due course.
 
 [Selenium]: https://selenium.dev/
-[geckodriver]: https://firefox-source-docs.mozilla.org/testing/geckodriver/
 
 ## Development notes:
 
@@ -276,22 +283,12 @@ The docker/db/scripts directory allows for the provision of valid sql commands
 in *sql files that will be copied into the container and used to initialize
 the database if required.
 
-If you have docker-compose installed, the db container can be brought up with:
+If you have docker-compose installed, the db container can be brought up from
+the `docker` directory with:
 
 ```
-docker-compose up -d
+docker-compose up db -d
 ```
-
-If you have podman instead of docker, it is possible to use docker-compose in
-a similar way. Consult [this article][Use docker-compose with podman] for the
-details but note that, at the time of writing, there is an error in the
-article and you need to use
-
-```
-export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
-```
-
-[Use docker-compose with podman]: https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/
 
 ### Specifying the Postgresql Backend
 
@@ -315,3 +312,21 @@ DATABASES = {
 
 Note that this aspect of the setup should be expected to change to smooth over
 some of the difficulties around editing a file that is in source control.
+
+## Notes on using podman instead of docker
+
+If you have podman instead of docker, the `podman` command should work as a
+drop-in replacement for `docker` commands where these are used in this README.
+
+It should also now be possible to use `docker-compose` commands directly with
+a little preparation. Consult [this article][Use docker-compose with podman]
+for details but note that, at the time of writing, there is an error in the
+article and you will need to use
+
+```
+export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock
+```
+
+to successfully run `docker-compose` commands.
+
+[Use docker-compose with podman]: https://fedoramagazine.org/use-docker-compose-with-podman-to-orchestrate-containers-on-fedora/
