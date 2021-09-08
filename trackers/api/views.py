@@ -16,11 +16,9 @@
 #  under the License.
 
 from django.contrib.auth.models import User, Group
-from django.shortcuts import get_object_or_404
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
+from rest_framework import permissions, viewsets
 from . import serializers
 from .. import models
 

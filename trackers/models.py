@@ -18,7 +18,6 @@
 import logging
 
 from django.db import models
-from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +60,11 @@ class Component(models.Model):
     name = models.TextField(primary_key=True)
     owner = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product,
+        db_column="product",
+        on_delete=models.PROTECT,
+    )
 
     class Meta:
         db_table = 'component'
@@ -84,7 +87,11 @@ class Milestone(models.Model):
     due = models.BigIntegerField(blank=True, null=True)
     completed = models.BigIntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product,
+        db_column="product",
+        on_delete=models.PROTECT,
+    )
 
     class Meta:
         db_table = 'milestone'
@@ -95,7 +102,11 @@ class Version(models.Model):
     name = models.TextField(primary_key=True)
     time = models.BigIntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product,
+        db_column="product",
+        on_delete=models.PROTECT,
+    )
 
     class Meta:
         db_table = 'version'
@@ -106,15 +117,20 @@ class Ticket(models.Model):
     uid = models.AutoField(primary_key=True)
     type = models.ForeignKey(
         Enum,
+        on_delete=models.PROTECT,
+        db_column="type",
+        related_name='%(app_label)s_%(class)s_type_related',
         blank=True,
         null=True,
-        on_delete=models.PROTECT,
-        related_name='%(app_label)s_%(class)s_type_related',
     )
     time = models.BigIntegerField(blank=True, null=True)
     changetime = models.BigIntegerField(blank=True, null=True)
     component = models.ForeignKey(
-        Component, on_delete=models.PROTECT, blank=True, null=True
+        Component,
+        on_delete=models.PROTECT,
+        db_column="component",
+        blank=True,
+        null=True,
     )
     severity = models.TextField(blank=True, null=True)
     priority = models.TextField(blank=True, null=True)
@@ -122,15 +138,24 @@ class Ticket(models.Model):
     reporter = models.TextField(blank=True, null=True)
     cc = models.TextField(blank=True, null=True)
     version = models.ForeignKey(
-        Version, on_delete=models.PROTECT, blank=True, null=True
+        Version,
+        on_delete=models.PROTECT,
+        db_column="version",
+        blank=True,
+        null=True,
     )
     milestone = models.ForeignKey(
-        Milestone, on_delete=models.PROTECT, blank=True, null=True
+        Milestone,
+        on_delete=models.PROTECT,
+        db_column="milestone",
+        blank=True,
+        null=True,
     )
     status = models.TextField(blank=True, null=True)
     resolution = models.ForeignKey(
         Enum,
         on_delete=models.PROTECT,
+        db_column="resolution",
         related_name='%(app_label)s_%(class)s_resolution_related',
         blank=True,
         null=True,
@@ -138,7 +163,7 @@ class Ticket(models.Model):
     summary = models.TextField()
     description = models.TextField(blank=True, null=True)
     keywords = models.TextField(blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, db_column="product")
     product_ticket_id = models.IntegerField(db_column='id', editable=False)
 
     class Meta:
