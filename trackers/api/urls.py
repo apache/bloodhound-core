@@ -18,7 +18,6 @@
 from django.urls import path
 from django.conf.urls import include
 from rest_framework.schemas import get_schema_view
-from rest_framework.renderers import JSONOpenAPIRenderer
 from rest_framework_nested import routers
 from . import views
 

@@ -15,7 +15,6 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -27,12 +26,7 @@ from ...models import (
     Ticket,
     Version,
 )
-from ..serializers import (
-    ComponentSerializer,
-    MilestoneSerializer,
-    TicketSerializer,
-    VersionSerializer,
-)
+
 
 class TicketApiTest(APITestCase):
     """Tests for ticket API"""
@@ -313,7 +307,7 @@ class ComponentApiTest(APITestCase):
 
 
 class MilestoneApiTest(APITestCase):
-    """Tests for component API"""
+    """Tests for milestone API"""
 
     def setUp(self):
         self.product = Product.objects.create(prefix="BH", name="Bloodhound")

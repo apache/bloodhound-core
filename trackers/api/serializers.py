@@ -3,8 +3,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from ..models import Component, Milestone, Product, Ticket, Version
-from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
-from rest_framework_nested.relations import NestedHyperlinkedIdentityField
 from functools import partial
 
 

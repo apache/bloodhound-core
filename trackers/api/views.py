@@ -63,6 +63,7 @@ class ComponentViewSet(viewsets.ModelViewSet):
     queryset = models.Component.objects.all()
     serializer_class = serializers.ComponentSerializer
     lookup_field = 'name'
+    lookup_value_regex = '[^/]+'
 
     def get_queryset(self, *args, **kwargs):
         prefix = self.kwargs['product_prefix']
@@ -73,6 +74,7 @@ class MilestoneViewSet(viewsets.ModelViewSet):
     queryset = models.Milestone.objects.all()
     serializer_class = serializers.MilestoneSerializer
     lookup_field = 'name'
+    lookup_value_regex = '[^/]+'
 
     def get_queryset(self, *args, **kwargs):
         prefix = self.kwargs['product_prefix']
@@ -83,6 +85,7 @@ class VersionViewSet(viewsets.ModelViewSet):
     queryset = models.Version.objects.all()
     serializer_class = serializers.VersionSerializer
     lookup_field = 'name'
+    lookup_value_regex = '[^/]+'
 
     def get_queryset(self, *args, **kwargs):
         prefix = self.kwargs['product_prefix']
