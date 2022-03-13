@@ -193,7 +193,7 @@ If you have docker-compose installed, the `selenium-firefox` container can be
 brought up from the `docker` directory with:
 
 ```
-docker-compose up selenium-firefox -d
+docker-compose up -d selenium-firefox
 ```
 
 Or, with just docker (from any directory):
@@ -264,7 +264,8 @@ instead follow the simplified steps:
     ```
 
 While we recommend the first option, particularly for production deployments,
-the second option may be pragmatic for setting up for development or testing.
+the simplified option may be pragmatic for setting up for development or
+testing.
 
 ### Running Postgresql
 
@@ -287,7 +288,7 @@ If you have docker-compose installed, the db container can be brought up from
 the `docker` directory with:
 
 ```
-docker-compose up db -d
+docker-compose up -d db
 ```
 
 ### Specifying the Postgresql Backend
