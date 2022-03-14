@@ -27,7 +27,7 @@ This version of Apache Bloodhound requires Python, Poetry and Django.
 
 ### Installing Python
 
-The versions of Python that can be used are currently 3.6, 3.7, 3.8 and 3.9.
+The versions of Python that can be used are currently 3.8, 3.9 and 3.10.
 
 Where convenient is it sensible to go for the newest release of Python that
 you can.
