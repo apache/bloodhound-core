@@ -31,6 +31,7 @@ products_router.register('tickets', views.TicketViewSet, basename='product-ticke
 products_router.register('components', views.ComponentViewSet, basename='product-components')
 products_router.register('milestones', views.MilestoneViewSet, basename='product-milestones')
 products_router.register('versions', views.VersionViewSet, basename='product-versions')
+products_router.register('ticketchanges', views.TicketChangeViewSet, basename='product-ticketchanges')
 
 urlpatterns = [
     path('', include(router.urls)),

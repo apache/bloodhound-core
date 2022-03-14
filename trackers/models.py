@@ -188,13 +188,22 @@ class Ticket(models.Model):
 
 
 class TicketChange(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT)
-    time = models.BigIntegerField()
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.PROTECT,
+        db_column='ticket',
+        related_name='%(app_label)s_%(class)s_ticket_related',
+    )
+    time = models.BigIntegerField(blank=True, null=True)
     author = models.TextField(blank=True, null=True)
     field = models.TextField()
     oldvalue = models.TextField(blank=True, null=True)
     newvalue = models.TextField(blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product,
+        db_column="product",
+        on_delete=models.PROTECT,
+    )
 
     class Meta:
         db_table = 'ticket_change'

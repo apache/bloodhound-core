@@ -49,6 +49,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     lookup_field = 'prefix'
 
 
+class TicketChangeViewSet(viewsets.ModelViewSet):
+    queryset = models.TicketChange.objects.all()
+    serializer_class = serializers.TicketChangeSerializer
+    lookup_field = 'time'
+
+    def get_queryset(self, *args, **kwargs):
+        prefix = self.kwargs['product_prefix']
+        return models.TicketChange.objects.filter(product=prefix)
+
+
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = models.Ticket.objects.all()
     serializer_class = serializers.TicketSerializer

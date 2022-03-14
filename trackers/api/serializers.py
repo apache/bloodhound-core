@@ -2,7 +2,14 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from ..models import Component, Milestone, Product, Ticket, Version
+from ..models import (
+    Component,
+    Milestone,
+    Product,
+    Ticket,
+    TicketChange,
+    Version,
+)
 from functools import partial
 
 
@@ -12,6 +19,8 @@ def get_self_url(obj, context, obj_type):
     }
     if obj_type == 'ticket':
         keywords['product_ticket_id'] = obj.product_ticket_id
+    elif obj_type == 'ticketchange':
+        keywords['time'] = obj.time
     else:
         keywords['name'] = obj.name
 
@@ -55,6 +64,17 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
+class TicketChangeSerializer(ProductChildSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TicketChange
+        fields = ('url', 'time', 'author', 'field', 'oldvalue', 'newvalue')
+
+    def get_url(self, obj):
+        return get_self_url(obj, self.context, 'ticketchange')
+
+
 class TicketSerializer(ProductChildSerializer):
     url = serializers.SerializerMethodField()
 
@@ -66,6 +86,15 @@ class TicketSerializer(ProductChildSerializer):
             'product_ticket_id',
             'summary',
             'description',
+            'time',
+            'changetime',
+            'reporter',
+            'owner',
+            'cc',
+            'status',
+            'severity',
+            'priority',
+            'keywords',
         )
         extra_kwargs = {
             'product_ticket_id': {'required': False},
@@ -152,6 +181,10 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         view_name='product-versions-list',
     )
 
+    ticketchanges_url = ProductHyperlinkedModelSerializer(
+        view_name='product-ticketchanges-list',
+    )
+
     class Meta:
         model = Product
         fields = (
@@ -164,4 +197,5 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
             'components_url',
             'milestones_url',
             'versions_url',
+            'ticketchanges_url',
         )
