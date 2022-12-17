@@ -15,6 +15,8 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
+"""Main DB models for Apache Bloodhound."""
+
 import logging
 
 from django.db import models
@@ -23,6 +25,8 @@ logger = logging.getLogger(__name__)
 
 
 class Product(models.Model):
+    """Product table."""
+
     prefix = models.TextField(primary_key=True)
     name = models.TextField()
     description = models.TextField(blank=True, null=True)
@@ -33,7 +37,7 @@ class Product(models.Model):
 
 
 class ProductConfig(models.Model):
-    """Possibly legacy table - keeping for now"""
+    """Possibly legacy table - keeping for now."""
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     section = models.TextField()
@@ -46,7 +50,7 @@ class ProductConfig(models.Model):
 
 
 class ProductResourceMap(models.Model):
-    """Possibly legacy model - keeping for now"""
+    """Possibly legacy model - keeping for now."""
 
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     resource_type = models.TextField(blank=True, null=True)
@@ -57,6 +61,8 @@ class ProductResourceMap(models.Model):
 
 
 class Component(models.Model):
+    """Component table."""
+
     name = models.TextField(primary_key=True)
     owner = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -72,6 +78,8 @@ class Component(models.Model):
 
 
 class Enum(models.Model):
+    """Enum table."""
+
     type = models.TextField(primary_key=True)
     name = models.TextField()
     value = models.TextField(blank=True, null=True)
@@ -83,6 +91,8 @@ class Enum(models.Model):
 
 
 class Milestone(models.Model):
+    """Milestone table."""
+
     name = models.TextField(primary_key=True)
     due = models.BigIntegerField(blank=True, null=True)
     completed = models.BigIntegerField(blank=True, null=True)
@@ -99,6 +109,8 @@ class Milestone(models.Model):
 
 
 class Version(models.Model):
+    """Version table."""
+
     name = models.TextField(primary_key=True)
     time = models.BigIntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -114,6 +126,8 @@ class Version(models.Model):
 
 
 class Ticket(models.Model):
+    """Ticket table."""
+
     uid = models.AutoField(primary_key=True)
     type = models.ForeignKey(
         Enum,
@@ -188,6 +202,8 @@ class Ticket(models.Model):
 
 
 class TicketChange(models.Model):
+    """TicketChange table."""
+
     ticket = models.ForeignKey(
         Ticket,
         on_delete=models.PROTECT,
@@ -211,6 +227,8 @@ class TicketChange(models.Model):
 
 
 class TicketCustom(models.Model):
+    """TicketCustom table."""
+
     ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT)
     name = models.TextField()
     value = models.TextField(blank=True, null=True)
@@ -222,6 +240,8 @@ class TicketCustom(models.Model):
 
 
 class Report(models.Model):
+    """Report table - potentially legacy."""
+
     author = models.TextField(blank=True, null=True)
     title = models.TextField(blank=True, null=True)
     query = models.TextField(blank=True, null=True)

@@ -63,7 +63,7 @@ endif
 .PHONY: selenium-clean
 
 functional-test: selenium-start
-	poetry run python functional_tests.py
+	$(PYTHON) functional_tests.py
 .PHONY: functional-test
 
 clean-deplock:
@@ -86,3 +86,6 @@ endif
 
 full-clean: clean-deplock clean-venv clean-db selenium-clean
 .PHONY: full-clean
+
+show-urls: manage-show_urls
+.PHONY: show-urls
