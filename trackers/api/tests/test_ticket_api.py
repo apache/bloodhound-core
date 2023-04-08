@@ -67,7 +67,7 @@ class TicketApiTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['summary'], self.record1.summary)
+        self.assertEqual(response.data["summary"], self.record1.summary)
 
     def test_get_invalid_ticket(self):
         response = self.client.get(
@@ -90,18 +90,14 @@ class TicketApiTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         record = Ticket.objects.get(
-            product=self.product,
-            product_ticket_id=response.data['product_ticket_id']
+            product=self.product, product_ticket_id=response.data["product_ticket_id"]
         )
 
-        self.assertEqual(response.data['summary'], record.summary)
+        self.assertEqual(response.data["summary"], record.summary)
 
     def test_create_invalid_product(self):
         response = self.client.post(
-            reverse(
-                'product-tickets-list',
-                kwargs={"product_prefix": "INVALID"}
-            ),
+            reverse("product-tickets-list", kwargs={"product_prefix": "INVALID"}),
             self.request_data,
         )
 
@@ -109,7 +105,7 @@ class TicketApiTest(APITestCase):
 
     def test_create_missing_summary(self):
         response = self.client.post(
-            reverse('product-tickets-list', kwargs={"product_prefix": "BH"}),
+            reverse("product-tickets-list", kwargs={"product_prefix": "BH"}),
             self.bad_request_data,
         )
 
@@ -130,12 +126,11 @@ class TicketApiTest(APITestCase):
         old_summary = self.record1.summary
 
         record = Ticket.objects.get(
-            product=self.product,
-            product_ticket_id=response.data['product_ticket_id']
+            product=self.product, product_ticket_id=response.data["product_ticket_id"]
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['summary'], record.summary)
+        self.assertEqual(response.data["summary"], record.summary)
         self.assertNotEqual(old_summary, record.summary)
 
     def test_update_ticket_bad_data(self):
@@ -155,11 +150,11 @@ class TicketApiTest(APITestCase):
     def test_delete_ticket(self):
         response = self.client.delete(
             reverse(
-                'product-tickets-detail',
+                "product-tickets-detail",
                 kwargs={
                     "product_prefix": self.record1.product.prefix,
                     "product_ticket_id": self.record1.product_ticket_id,
-                }
+                },
             ),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -175,8 +170,12 @@ class ComponentApiTest(APITestCase):
 
     def setUp(self):
         self.product = Product.objects.create(prefix="BH", name="Bloodhound")
-        self.record1 = Component.objects.create(product=self.product, name="Component 1")
-        self.record2 = Component.objects.create(product=self.product, name="Component 2")
+        self.record1 = Component.objects.create(
+            product=self.product, name="Component 1"
+        )
+        self.record2 = Component.objects.create(
+            product=self.product, name="Component 2"
+        )
 
         self.request_data = {
             "name": "Example Name",
@@ -209,7 +208,7 @@ class ComponentApiTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], self.record1.name)
+        self.assertEqual(response.data["name"], self.record1.name)
 
     def test_get_missing_component(self):
         response = self.client.get(
@@ -225,28 +224,19 @@ class ComponentApiTest(APITestCase):
 
     def test_create_component(self):
         response = self.client.post(
-            reverse(
-                "product-components-list",
-                kwargs={"product_prefix": "BH"}
-            ),
+            reverse("product-components-list", kwargs={"product_prefix": "BH"}),
             self.request_data,
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        record = Component.objects.get(
-            product=self.product,
-            name=response.data['name']
-        )
+        record = Component.objects.get(product=self.product, name=response.data["name"])
 
-        self.assertEqual(response.data['name'], record.name)
+        self.assertEqual(response.data["name"], record.name)
 
     def test_create_component_with_invalid_product(self):
         response = self.client.post(
-            reverse(
-                'product-components-list',
-                kwargs={"product_prefix": "INVALID"}
-            ),
+            reverse("product-components-list", kwargs={"product_prefix": "INVALID"}),
             self.request_data,
         )
 
@@ -291,11 +281,11 @@ class ComponentApiTest(APITestCase):
     def test_delete_component(self):
         response = self.client.delete(
             reverse(
-                'product-components-detail',
+                "product-components-detail",
                 kwargs={
                     "product_prefix": self.record1.product.prefix,
                     "name": self.record1.name,
-                }
+                },
             ),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -311,8 +301,12 @@ class MilestoneApiTest(APITestCase):
 
     def setUp(self):
         self.product = Product.objects.create(prefix="BH", name="Bloodhound")
-        self.record1 = Milestone.objects.create(product=self.product, name="Milestone 1")
-        self.record2 = Milestone.objects.create(product=self.product, name="Milestone 2")
+        self.record1 = Milestone.objects.create(
+            product=self.product, name="Milestone 1"
+        )
+        self.record2 = Milestone.objects.create(
+            product=self.product, name="Milestone 2"
+        )
 
         self.request_data = {
             "name": "Example Name",
@@ -346,7 +340,7 @@ class MilestoneApiTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], self.record1.name)
+        self.assertEqual(response.data["name"], self.record1.name)
 
     def test_get_missing_milestone(self):
         response = self.client.get(
@@ -362,28 +356,19 @@ class MilestoneApiTest(APITestCase):
 
     def test_create_milestone(self):
         response = self.client.post(
-            reverse(
-                "product-milestones-list",
-                kwargs={"product_prefix": "BH"}
-            ),
+            reverse("product-milestones-list", kwargs={"product_prefix": "BH"}),
             self.request_data,
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        record = Milestone.objects.get(
-            product=self.product,
-            name=response.data['name']
-        )
+        record = Milestone.objects.get(product=self.product, name=response.data["name"])
 
-        self.assertEqual(response.data['description'], record.description)
+        self.assertEqual(response.data["description"], record.description)
 
     def test_create_milestone_with_invalid_product(self):
         response = self.client.post(
-            reverse(
-                'product-milestones-list',
-                kwargs={"product_prefix": "INVALID"}
-            ),
+            reverse("product-milestones-list", kwargs={"product_prefix": "INVALID"}),
             self.request_data,
         )
 
@@ -403,13 +388,10 @@ class MilestoneApiTest(APITestCase):
 
         old_name = self.record1.name
 
-        record = Milestone.objects.get(
-            product=self.product,
-            name=response.data['name']
-        )
+        record = Milestone.objects.get(product=self.product, name=response.data["name"])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['description'], record.description)
+        self.assertEqual(response.data["description"], record.description)
         self.assertNotEqual(old_name, record.name)
 
     def test_update_milestone_bad_data(self):
@@ -429,11 +411,11 @@ class MilestoneApiTest(APITestCase):
     def test_delete_milestone(self):
         response = self.client.delete(
             reverse(
-                'product-milestones-detail',
+                "product-milestones-detail",
                 kwargs={
                     "product_prefix": self.record1.product.prefix,
                     "name": self.record1.name,
-                }
+                },
             ),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -484,7 +466,7 @@ class VersionApiTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], self.record1.name)
+        self.assertEqual(response.data["name"], self.record1.name)
 
     def test_get_missing_version(self):
         response = self.client.get(
@@ -500,28 +482,19 @@ class VersionApiTest(APITestCase):
 
     def test_create_version(self):
         response = self.client.post(
-            reverse(
-                "product-versions-list",
-                kwargs={"product_prefix": "BH"}
-            ),
+            reverse("product-versions-list", kwargs={"product_prefix": "BH"}),
             self.request_data,
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        record = Version.objects.get(
-            product=self.product,
-            name=response.data['name']
-        )
+        record = Version.objects.get(product=self.product, name=response.data["name"])
 
-        self.assertEqual(response.data['description'], record.description)
+        self.assertEqual(response.data["description"], record.description)
 
     def test_create_version_with_invalid_product(self):
         response = self.client.post(
-            reverse(
-                'product-versions-list',
-                kwargs={"product_prefix": "INVALID"}
-            ),
+            reverse("product-versions-list", kwargs={"product_prefix": "INVALID"}),
             self.request_data,
         )
 
@@ -542,10 +515,7 @@ class VersionApiTest(APITestCase):
 
         old_name = self.record1.name
 
-        record = Version.objects.get(
-            product=self.product,
-            name=response.data['name']
-        )
+        record = Version.objects.get(product=self.product, name=response.data["name"])
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(new_name, old_name)
@@ -568,11 +538,11 @@ class VersionApiTest(APITestCase):
     def test_delete_version(self):
         response = self.client.delete(
             reverse(
-                'product-versions-detail',
+                "product-versions-detail",
                 kwargs={
                     "product_prefix": self.record1.product.prefix,
                     "name": self.record1.name,
-                }
+                },
             ),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

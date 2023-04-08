@@ -21,21 +21,22 @@ from ..models import Product, Ticket
 
 class ProductTest(TestCase):
     """Tests for Product model"""
+
     def setUp(self):
         Product.objects.create(
-            prefix='BHD',
-            name='Bloodhound Legacy',
-            description='The original Apache Bloodhound',
+            prefix="BHD",
+            name="Bloodhound Legacy",
+            description="The original Apache Bloodhound",
         )
         Product.objects.create(
-            prefix='BH',
-            name='Bloodhound',
-            description='The future of Apache Bloodhound',
+            prefix="BH",
+            name="Bloodhound",
+            description="The future of Apache Bloodhound",
         )
 
     def test_product_name(self):
-        bhd = Product.objects.get(prefix='BHD')
-        bh = Product.objects.get(prefix='BH')
+        bhd = Product.objects.get(prefix="BHD")
+        bh = Product.objects.get(prefix="BH")
 
         self.assertEqual(bhd.name, "Bloodhound Legacy")
         self.assertEqual(bh.name, "Bloodhound")
@@ -43,11 +44,12 @@ class ProductTest(TestCase):
 
 class TicketTest(TestCase):
     """Test for Ticket model"""
+
     def setUp(self):
         self.product = Product.objects.create(
-            prefix='BH',
-            name='Bloodhound',
-            description='Apache Bloodhound',
+            prefix="BH",
+            name="Bloodhound",
+            description="Apache Bloodhound",
         )
 
     def test_ticket_create_sets_product_ticket_number(self):

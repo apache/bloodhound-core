@@ -22,37 +22,47 @@ from rest_framework_nested import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register('users', views.UserViewSet)
-router.register('groups', views.GroupViewSet)
-router.register('products', views.ProductViewSet)
+router.register("users", views.UserViewSet)
+router.register("groups", views.GroupViewSet)
+router.register("products", views.ProductViewSet)
 
-products_router = routers.NestedDefaultRouter(router, 'products', lookup='product')
-products_router.register('tickets', views.TicketViewSet, basename='product-tickets')
-products_router.register('components', views.ComponentViewSet, basename='product-components')
-products_router.register('milestones', views.MilestoneViewSet, basename='product-milestones')
-products_router.register('versions', views.VersionViewSet, basename='product-versions')
-products_router.register('ticketchanges', views.TicketChangeViewSet, basename='product-ticketchanges')
+products_router = routers.NestedDefaultRouter(router, "products", lookup="product")
+products_router.register("tickets", views.TicketViewSet, basename="product-tickets")
+products_router.register(
+    "components", views.ComponentViewSet, basename="product-components"
+)
+products_router.register(
+    "milestones", views.MilestoneViewSet, basename="product-milestones"
+)
+products_router.register("versions", views.VersionViewSet, basename="product-versions")
+products_router.register(
+    "ticketchanges", views.TicketChangeViewSet, basename="product-ticketchanges"
+)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('', include(products_router.urls)),
-    path('openapi', get_schema_view(
-        title="Apache Bloodhound",
-        version="0.1.0",
-    ), name='openapi-schema'),
+    path("", include(router.urls)),
+    path("", include(products_router.urls)),
     path(
-        'swagger<str:format>',
+        "openapi",
+        get_schema_view(
+            title="Apache Bloodhound",
+            version="0.1.0",
+        ),
+        name="openapi-schema",
+    ),
+    path(
+        "swagger<str:format>",
         views.schema_view.without_ui(cache_timeout=0),
-        name='schema-json',
+        name="schema-json",
     ),
     path(
-        'swagger/',
-        views.schema_view.with_ui('swagger', cache_timeout=0),
-        name='schema-swagger-ui',
+        "swagger/",
+        views.schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
     ),
     path(
-        'redoc/',
-        views.schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc',
+        "redoc/",
+        views.schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
     ),
 ]

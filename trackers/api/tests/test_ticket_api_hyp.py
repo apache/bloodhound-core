@@ -23,14 +23,18 @@ from rest_framework import status
 
 from ...models import Product
 
-name_st = st.text(
-    st.characters(
-        blacklist_characters="/",
-        max_codepoint=1000,
-        blacklist_categories=("Cc", "Cs")
-    ),
-    min_size=1
-).map(lambda x: x.strip()).filter(lambda s: len(s) > 0)
+name_st = (
+    st.text(
+        st.characters(
+            blacklist_characters="/",
+            max_codepoint=1000,
+            blacklist_categories=("Cc", "Cs"),
+        ),
+        min_size=1,
+    )
+    .map(lambda x: x.strip())
+    .filter(lambda s: len(s) > 0)
+)
 
 
 class CommonAPIPropertiesTestCase(TestCase):
@@ -40,10 +44,7 @@ class CommonAPIPropertiesTestCase(TestCase):
         self.client = APIClient()
         self.factory = APIRequestFactory()
         self.product = Product.objects.create(prefix="BH", name="Bloodhound")
-        self.list_uri = reverse(
-            self.list_view_name,
-            kwargs={"product_prefix": "BH"}
-        )
+        self.list_uri = reverse(self.list_view_name, kwargs={"product_prefix": "BH"})
 
 
 class NameTestsMixin:

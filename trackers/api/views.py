@@ -25,8 +25,8 @@ from .. import models
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='Bloodhound Core API',
-        default_version='v1',
+        title="Bloodhound Core API",
+        default_version="v1",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -46,57 +46,57 @@ class GroupViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
-    lookup_field = 'prefix'
+    lookup_field = "prefix"
 
 
 class TicketChangeViewSet(viewsets.ModelViewSet):
     queryset = models.TicketChange.objects.all()
     serializer_class = serializers.TicketChangeSerializer
-    lookup_field = 'time'
+    lookup_field = "time"
 
     def get_queryset(self, *args, **kwargs):
-        prefix = self.kwargs['product_prefix']
+        prefix = self.kwargs["product_prefix"]
         return models.TicketChange.objects.filter(product=prefix)
 
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = models.Ticket.objects.all()
     serializer_class = serializers.TicketSerializer
-    lookup_field = 'product_ticket_id'
+    lookup_field = "product_ticket_id"
 
     def get_queryset(self, *args, **kwargs):
-        prefix = self.kwargs['product_prefix']
+        prefix = self.kwargs["product_prefix"]
         return models.Ticket.objects.filter(product=prefix)
 
 
 class ComponentViewSet(viewsets.ModelViewSet):
     queryset = models.Component.objects.all()
     serializer_class = serializers.ComponentSerializer
-    lookup_field = 'name'
-    lookup_value_regex = '[^/]+'
+    lookup_field = "name"
+    lookup_value_regex = "[^/]+"
 
     def get_queryset(self, *args, **kwargs):
-        prefix = self.kwargs['product_prefix']
+        prefix = self.kwargs["product_prefix"]
         return models.Component.objects.filter(product=prefix)
 
 
 class MilestoneViewSet(viewsets.ModelViewSet):
     queryset = models.Milestone.objects.all()
     serializer_class = serializers.MilestoneSerializer
-    lookup_field = 'name'
-    lookup_value_regex = '[^/]+'
+    lookup_field = "name"
+    lookup_value_regex = "[^/]+"
 
     def get_queryset(self, *args, **kwargs):
-        prefix = self.kwargs['product_prefix']
+        prefix = self.kwargs["product_prefix"]
         return models.Milestone.objects.filter(product=prefix)
 
 
 class VersionViewSet(viewsets.ModelViewSet):
     queryset = models.Version.objects.all()
     serializer_class = serializers.VersionSerializer
-    lookup_field = 'name'
-    lookup_value_regex = '[^/]+'
+    lookup_field = "name"
+    lookup_value_regex = "[^/]+"
 
     def get_queryset(self, *args, **kwargs):
-        prefix = self.kwargs['product_prefix']
+        prefix = self.kwargs["product_prefix"]
         return models.Version.objects.filter(product=prefix)

@@ -23,13 +23,13 @@ from ..views import home
 
 class HomePageTest(TestCase):
     def test_root_url_resolves_to_home_page_view(self):
-        found = resolve('/')
+        found = resolve("/")
         self.assertEqual(found.func, home)
 
     def test_home_page_returns_expected_html(self):
         request = HttpRequest()
         response = home(request)
 
-        self.assertTrue(response.content.startswith(b'<html>'))
-        self.assertIn(b'<title>Bloodhound Trackers</title>', response.content)
-        self.assertTrue(response.content.endswith(b'</html>'))
+        self.assertTrue(response.content.startswith(b"<html>"))
+        self.assertIn(b"<title>Bloodhound Trackers</title>", response.content)
+        self.assertTrue(response.content.endswith(b"</html>"))

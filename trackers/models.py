@@ -33,7 +33,7 @@ class Product(models.Model):
     owner = models.TextField(blank=True, null=True)
 
     class Meta:
-        db_table = 'bloodhound_product'
+        db_table = "bloodhound_product"
 
 
 class ProductConfig(models.Model):
@@ -45,8 +45,8 @@ class ProductConfig(models.Model):
     value = models.TextField(blank=True, null=True)
 
     class Meta:
-        db_table = 'bloodhound_productconfig'
-        unique_together = (('product', 'section', 'option'),)
+        db_table = "bloodhound_productconfig"
+        unique_together = (("product", "section", "option"),)
 
 
 class ProductResourceMap(models.Model):
@@ -57,7 +57,7 @@ class ProductResourceMap(models.Model):
     resource_id = models.TextField(blank=True, null=True)
 
     class Meta:
-        db_table = 'bloodhound_productresourcemap'
+        db_table = "bloodhound_productresourcemap"
 
 
 class Component(models.Model):
@@ -73,8 +73,8 @@ class Component(models.Model):
     )
 
     class Meta:
-        db_table = 'component'
-        unique_together = (('name', 'product'),)
+        db_table = "component"
+        unique_together = (("name", "product"),)
 
 
 class Enum(models.Model):
@@ -86,8 +86,8 @@ class Enum(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
 
     class Meta:
-        db_table = 'enum'
-        unique_together = (('type', 'name', 'product'),)
+        db_table = "enum"
+        unique_together = (("type", "name", "product"),)
 
 
 class Milestone(models.Model):
@@ -104,8 +104,8 @@ class Milestone(models.Model):
     )
 
     class Meta:
-        db_table = 'milestone'
-        unique_together = (('name', 'product'),)
+        db_table = "milestone"
+        unique_together = (("name", "product"),)
 
 
 class Version(models.Model):
@@ -121,8 +121,8 @@ class Version(models.Model):
     )
 
     class Meta:
-        db_table = 'version'
-        unique_together = (('name', 'product'),)
+        db_table = "version"
+        unique_together = (("name", "product"),)
 
 
 class Ticket(models.Model):
@@ -133,7 +133,7 @@ class Ticket(models.Model):
         Enum,
         on_delete=models.PROTECT,
         db_column="type",
-        related_name='%(app_label)s_%(class)s_type_related',
+        related_name="%(app_label)s_%(class)s_type_related",
         blank=True,
         null=True,
     )
@@ -170,7 +170,7 @@ class Ticket(models.Model):
         Enum,
         on_delete=models.PROTECT,
         db_column="resolution",
-        related_name='%(app_label)s_%(class)s_resolution_related',
+        related_name="%(app_label)s_%(class)s_resolution_related",
         blank=True,
         null=True,
     )
@@ -178,11 +178,11 @@ class Ticket(models.Model):
     description = models.TextField(blank=True, null=True)
     keywords = models.TextField(blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.PROTECT, db_column="product")
-    product_ticket_id = models.IntegerField(db_column='id', editable=False)
+    product_ticket_id = models.IntegerField(db_column="id", editable=False)
 
     class Meta:
-        db_table = 'ticket'
-        unique_together = (('product', 'product_ticket_id'),)
+        db_table = "ticket"
+        unique_together = (("product", "product_ticket_id"),)
 
     def save(self, *args, **kwargs):
         if self._state.adding:
@@ -193,7 +193,7 @@ class Ticket(models.Model):
             #     recording last used on product model
             product_tickets = Ticket.objects.filter(product=self.product)
             if product_tickets.exists():
-                newest = product_tickets.latest('product_ticket_id')
+                newest = product_tickets.latest("product_ticket_id")
                 new_id = 1 + newest.product_ticket_id
             else:
                 new_id = 1
@@ -207,8 +207,8 @@ class TicketChange(models.Model):
     ticket = models.ForeignKey(
         Ticket,
         on_delete=models.PROTECT,
-        db_column='ticket',
-        related_name='%(app_label)s_%(class)s_ticket_related',
+        db_column="ticket",
+        related_name="%(app_label)s_%(class)s_ticket_related",
     )
     time = models.BigIntegerField(blank=True, null=True)
     author = models.TextField(blank=True, null=True)
@@ -222,8 +222,8 @@ class TicketChange(models.Model):
     )
 
     class Meta:
-        db_table = 'ticket_change'
-        unique_together = (('ticket', 'time', 'field', 'product'),)
+        db_table = "ticket_change"
+        unique_together = (("ticket", "time", "field", "product"),)
 
 
 class TicketCustom(models.Model):
@@ -235,8 +235,8 @@ class TicketCustom(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
 
     class Meta:
-        db_table = 'ticket_custom'
-        unique_together = (('ticket', 'name', 'product'),)
+        db_table = "ticket_custom"
+        unique_together = (("ticket", "name", "product"),)
 
 
 class Report(models.Model):
@@ -249,5 +249,5 @@ class Report(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
 
     class Meta:
-        db_table = 'report'
-        unique_together = (('id', 'product'),)
+        db_table = "report"
+        unique_together = (("id", "product"),)

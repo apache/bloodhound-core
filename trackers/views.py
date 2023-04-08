@@ -19,4 +19,4 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse('<html><title>Bloodhound Trackers</title></html>')
+    return HttpResponse("<html><title>Bloodhound Trackers</title></html>")

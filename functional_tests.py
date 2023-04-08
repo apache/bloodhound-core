@@ -26,8 +26,7 @@ class SeleniumTestCase(unittest.TestCase):
     def setUp(self):
         server = "http://127.0.0.1:4444/wd/hub"
         self.browser = webdriver.Remote(
-            command_executor=server,
-            desired_capabilities=DesiredCapabilities.FIREFOX
+            command_executor=server, desired_capabilities=DesiredCapabilities.FIREFOX
         )
         self.browser.implicitly_wait(3)
 
@@ -37,17 +36,17 @@ class SeleniumTestCase(unittest.TestCase):
 
 class HomePageViewTest(SeleniumTestCase):
     def test_user_can_see_homepage(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get("http://localhost:8000")
 
-        self.assertIn('Bloodhound', self.browser.title)
+        self.assertIn("Bloodhound", self.browser.title)
 
 
 class ApiHomePageViewTest(SeleniumTestCase):
     def test_user_can_see_api_homepage(self):
-        self.browser.get('http://localhost:8000/api')
+        self.browser.get("http://localhost:8000/api")
 
-        self.assertIn('Api Root', self.browser.title)
+        self.assertIn("Api Root", self.browser.title)
 
 
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+if __name__ == "__main__":
+    unittest.main(warnings="ignore")

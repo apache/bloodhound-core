@@ -14,3 +14,17 @@
 #  KIND, either express or implied.  See the License for the
 #  specific language governing permissions and limitations
 #  under the License.
+
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[*.{html,js,sh}]
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_style = space
+indent_size = 4

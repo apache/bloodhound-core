@@ -1,3 +1,20 @@
+#  Licensed to the Apache Software Foundation (ASF) under one
+#  or more contributor license agreements.  See the NOTICE file
+#  distributed with this work for additional information
+#  regarding copyright ownership.  The ASF licenses this file
+#  to you under the Apache License, Version 2.0 (the
+#  "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing,
+#  software distributed under the License is distributed on an
+#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  KIND, either express or implied.  See the License for the
+#  specific language governing permissions and limitations
+#  under the License.
+
 from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -15,19 +32,19 @@ from functools import partial
 
 def get_self_url(obj, context, obj_type):
     keywords = {
-        'product_prefix': obj.product.prefix,
+        "product_prefix": obj.product.prefix,
     }
-    if obj_type == 'ticket':
-        keywords['product_ticket_id'] = obj.product_ticket_id
-    elif obj_type == 'ticketchange':
-        keywords['time'] = obj.time
+    if obj_type == "ticket":
+        keywords["product_ticket_id"] = obj.product_ticket_id
+    elif obj_type == "ticketchange":
+        keywords["time"] = obj.time
     else:
-        keywords['name'] = obj.name
+        keywords["name"] = obj.name
 
     return reverse(
-        f'product-{obj_type}s-detail',
+        f"product-{obj_type}s-detail",
         kwargs=keywords,
-        request=context['request'],
+        request=context["request"],
     )
 
 
@@ -36,32 +53,30 @@ class ProductChildSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_product_url(self, obj):
         keywords = {
-            'prefix': obj.product.prefix,
+            "prefix": obj.product.prefix,
         }
         return reverse(
-            'product-detail',
-            kwargs=keywords,
-            request=self.context['request']
+            "product-detail", kwargs=keywords, request=self.context["request"]
         )
 
     def create(self, validated_data):
-        if 'prefix' not in self.context['view'].kwargs.keys():
-            prefix = self.context['view'].kwargs['product_prefix']
+        if "prefix" not in self.context["view"].kwargs.keys():
+            prefix = self.context["view"].kwargs["product_prefix"]
             product = get_object_or_404(Product.objects.all(), prefix=prefix)
-            validated_data['product'] = product
+            validated_data["product"] = product
         return super().create(validated_data)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'is_staff')
+        fields = ("url", "username", "email", "is_staff")
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = ('url', 'name')
+        fields = ("url", "name")
 
 
 class TicketChangeSerializer(ProductChildSerializer):
@@ -69,10 +84,10 @@ class TicketChangeSerializer(ProductChildSerializer):
 
     class Meta:
         model = TicketChange
-        fields = ('url', 'time', 'author', 'field', 'oldvalue', 'newvalue')
+        fields = ("url", "time", "author", "field", "oldvalue", "newvalue")
 
     def get_url(self, obj):
-        return get_self_url(obj, self.context, 'ticketchange')
+        return get_self_url(obj, self.context, "ticketchange")
 
 
 class TicketSerializer(ProductChildSerializer):
@@ -81,27 +96,27 @@ class TicketSerializer(ProductChildSerializer):
     class Meta:
         model = Ticket
         fields = (
-            'product_url',
-            'url',
-            'product_ticket_id',
-            'summary',
-            'description',
-            'time',
-            'changetime',
-            'reporter',
-            'owner',
-            'cc',
-            'status',
-            'severity',
-            'priority',
-            'keywords',
+            "product_url",
+            "url",
+            "product_ticket_id",
+            "summary",
+            "description",
+            "time",
+            "changetime",
+            "reporter",
+            "owner",
+            "cc",
+            "status",
+            "severity",
+            "priority",
+            "keywords",
         )
         extra_kwargs = {
-            'product_ticket_id': {'required': False},
+            "product_ticket_id": {"required": False},
         }
 
     def get_url(self, obj):
-        return get_self_url(obj, self.context, 'ticket')
+        return get_self_url(obj, self.context, "ticket")
 
 
 class ComponentSerializer(ProductChildSerializer):
@@ -110,15 +125,15 @@ class ComponentSerializer(ProductChildSerializer):
     class Meta:
         model = Component
         fields = (
-            'product_url',
-            'url',
-            'name',
-            'description',
-            'owner',
+            "product_url",
+            "url",
+            "name",
+            "description",
+            "owner",
         )
 
     def get_url(self, obj):
-        return get_self_url(obj, self.context, 'component')
+        return get_self_url(obj, self.context, "component")
 
 
 class MilestoneSerializer(ProductChildSerializer):
@@ -127,16 +142,16 @@ class MilestoneSerializer(ProductChildSerializer):
     class Meta:
         model = Milestone
         fields = (
-            'product_url',
-            'url',
-            'name',
-            'description',
-            'due',
-            'completed',
+            "product_url",
+            "url",
+            "name",
+            "description",
+            "due",
+            "completed",
         )
 
     def get_url(self, obj):
-        return get_self_url(obj, self.context, 'milestone')
+        return get_self_url(obj, self.context, "milestone")
 
 
 class VersionSerializer(ProductChildSerializer):
@@ -145,57 +160,57 @@ class VersionSerializer(ProductChildSerializer):
     class Meta:
         model = Version
         fields = (
-            'product_url',
-            'url',
-            'name',
-            'description',
-            'time',
+            "product_url",
+            "url",
+            "name",
+            "description",
+            "time",
         )
 
     def get_url(self, obj):
-        return get_self_url(obj, self.context, 'version')
+        return get_self_url(obj, self.context, "version")
 
 
 ProductHyperlinkedModelSerializer = partial(
     serializers.HyperlinkedIdentityField,
-    lookup_field='prefix',
-    lookup_url_kwarg='product_prefix',
+    lookup_field="prefix",
+    lookup_url_kwarg="product_prefix",
 )
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='product-detail',
-        lookup_field='prefix',
+        view_name="product-detail",
+        lookup_field="prefix",
     )
     tickets_url = ProductHyperlinkedModelSerializer(
-        view_name='product-tickets-list',
+        view_name="product-tickets-list",
     )
     components_url = ProductHyperlinkedModelSerializer(
-        view_name='product-components-list',
+        view_name="product-components-list",
     )
     milestones_url = ProductHyperlinkedModelSerializer(
-        view_name='product-milestones-list',
+        view_name="product-milestones-list",
     )
     versions_url = ProductHyperlinkedModelSerializer(
-        view_name='product-versions-list',
+        view_name="product-versions-list",
     )
 
     ticketchanges_url = ProductHyperlinkedModelSerializer(
-        view_name='product-ticketchanges-list',
+        view_name="product-ticketchanges-list",
     )
 
     class Meta:
         model = Product
         fields = (
-            'url',
-            'prefix',
-            'name',
-            'description',
-            'owner',
-            'tickets_url',
-            'components_url',
-            'milestones_url',
-            'versions_url',
-            'ticketchanges_url',
+            "url",
+            "prefix",
+            "name",
+            "description",
+            "owner",
+            "tickets_url",
+            "components_url",
+            "milestones_url",
+            "versions_url",
+            "ticketchanges_url",
         )

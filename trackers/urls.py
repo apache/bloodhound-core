@@ -20,6 +20,6 @@ from django.conf.urls import include
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('api/', include('trackers.api.urls')),
+    path("", views.home, name="home"),
+    path("api/", include("trackers.api.urls")),
 ]
